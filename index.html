@@ -1,428 +1,3725 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Downloader</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background: linear-gradient(135deg, #ff0050, #00f2ea);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #333;
-        }
+<title>TikTok Downloader - RIO FERDINAN</title>
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            text-align: center;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        .logo {
-            margin-bottom: 20px;
-        }
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
 
-        .logo i {
-            font-size: 50px;
-            color: #ff0050;
-            margin-bottom: 10px;
-        }
+<style>
 
-        h1 {
-            color: #ff0050;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
+/* =========================================================
+   RESET
+========================================================= */
 
-        .description {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .input-group {
-            display: flex;
-            margin-bottom: 25px;
-        }
 
-        input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px 0 0 10px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
+/* =========================================================
+   COLORS
+========================================================= */
 
-        input:focus {
-            border-color: #00f2ea;
-        }
+:root {
 
-        button {
-            background: linear-gradient(to right, #ff0050, #00f2ea);
-            border: none;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 0 10px 10px 0;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: opacity 0.3s;
-        }
+    --bg: #050609;
+    --card: #0c1017;
+    --card2: #111722;
 
-        button:hover {
-            opacity: 0.9;
-        }
+    --text: #f7f8fb;
+    --muted: #8e97a6;
 
-        .result {
-            display: none;
-            margin-top: 30px;
-            animation: fadeIn 0.5s;
-        }
+    --pink: #ff0055;
+    --pink-light: #ff4d86;
 
-        .video-preview {
-            width: 100%;
-            max-width: 300px;
-            border-radius: 10px;
-            margin: 0 auto 20px;
-            display: block;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+    --cyan: #00e5dc;
+    --cyan-light: #5ffff5;
 
-        .download-btn {
-            display: inline-block;
-            background: linear-gradient(to right, #ff0050, #00f2ea);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 15px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+    --purple: #8b5cf6;
 
-        .download-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+    --border:
+        rgba(255,255,255,.08);
 
-        .loading {
-            display: none;
-            margin: 20px 0;
-        }
+    --gradient:
+        linear-gradient(
+            110deg,
+            #ff0055 0%,
+            #d72d8c 32%,
+            #8b5cf6 58%,
+            #00dcd3 100%
+        );
 
-        .loading .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid #ff0050;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
+    --gradient2:
+        linear-gradient(
+            135deg,
+            #ff0055,
+            #8b5cf6,
+            #00e5dc
+        );
+}
 
-        .error {
-            display: none;
-            color: #ff0050;
-            background-color: rgba(255, 0, 80, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            animation: shake 0.5s;
-        }
 
-        .how-to {
-            margin-top: 40px;
-            text-align: left;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-        }
+/* =========================================================
+   BODY
+========================================================= */
 
-        .how-to h3 {
-            color: #ff0050;
-            margin-bottom: 15px;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        .how-to ol {
-            padding-left: 20px;
-        }
+body {
 
-        .how-to li {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
+    min-height: 100vh;
 
-        footer {
-            margin-top: 30px;
-            color: #666;
-            font-size: 14px;
-        }
+    padding:
+        25px
+        12px
+        40px;
 
-        .video-info {
-            margin-bottom: 20px;
-            text-align: left;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 10px;
-        }
+    color: var(--text);
 
-        .video-info h3 {
-            color: #ff0050;
-            margin-bottom: 10px;
-        }
+    font-family:
+        "Inter",
+        sans-serif;
 
-        .video-info p {
-            color: #666;
-            line-height: 1.5;
-        }
+    background:
 
-        .download-options {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
+        radial-gradient(
+            circle at 0% 8%,
+            rgba(255,0,85,.20),
+            transparent 28%
+        ),
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        radial-gradient(
+            circle at 100% 35%,
+            rgba(0,229,220,.17),
+            transparent 30%
+        ),
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(139,92,246,.13),
+            transparent 35%
+        ),
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
+        #050609;
 
-        @media (max-width: 600px) {
-            .input-group {
-                flex-direction: column;
-            }
-            
-            input {
-                border-radius: 10px;
-                margin-bottom: 10px;
-            }
-            
-            button {
-                border-radius: 10px;
-                width: 100%;
-            }
+    display: flex;
+    justify-content: center;
+}
 
-            .download-options {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+    width: 100%;
+    max-width: 980px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo {
+
+    width: 72px;
+    height: 72px;
+
+    margin:
+        0 auto
+        13px;
+
+    border-radius: 21px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 33px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #151923,
+            #07090e
+        );
+
+    border: 1px solid
+        rgba(255,255,255,.1);
+
+    box-shadow:
+
+        0 0 0 1px
+        rgba(255,0,85,.12),
+
+        0 0 28px
+        rgba(255,0,85,.16),
+
+        0 0 45px
+        rgba(0,229,220,.08);
+
+    position: relative;
+}
+
+.logo::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: -1px;
+
+    border-radius: 21px;
+
+    padding: 1px;
+
+    background: var(--gradient2);
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0)
+        content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask-composite: exclude;
+
+    opacity: .65;
+}
+
+.logo i {
+
+    position: relative;
+
+    background:
+        var(--gradient2);
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter:
+        drop-shadow(
+            0 0 9px
+            rgba(255,0,85,.3)
+        );
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+h1 {
+
+    font-size:
+        clamp(
+            28px,
+            5vw,
+            47px
+        );
+
+    font-weight: 800;
+
+    letter-spacing: -2px;
+
+    color: white;
+}
+
+h1 .tik {
+    color: #ffffff;
+}
+
+h1 .tok {
+
+    background:
+        var(--gradient2);
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 10px;
+
+    padding:
+        7px
+        15px;
+
+    border-radius: 50px;
+
+    background:
+
+        linear-gradient(
+            100deg,
+            rgba(255,0,85,.13),
+            rgba(139,92,246,.12),
+            rgba(0,229,220,.10)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.11);
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.7px;
+
+    box-shadow:
+
+        0 0 20px
+        rgba(139,92,246,.10);
+}
+
+.brand-dot {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background:
+        var(--gradient2);
+
+    box-shadow:
+
+        0 0 9px
+        rgba(255,0,85,.55),
+
+        0 0 10px
+        rgba(0,229,220,.35);
+}
+
+
+/* =========================================================
+   SUBTITLE
+========================================================= */
+
+.subtitle {
+
+    margin-top: 9px;
+
+    color:
+        var(--muted);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.main-card {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(15,18,26,.98),
+            rgba(7,9,14,.99)
+        );
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 25px;
+
+    padding: 25px;
+
+    box-shadow:
+
+        0 30px 90px
+        rgba(0,0,0,.55),
+
+        inset 0 1px 0
+        rgba(255,255,255,.025);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* decorative glow */
+
+.main-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -110px;
+    left: -80px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,0,85,.13);
+
+    filter:
+        blur(50px);
+
+    pointer-events: none;
+}
+
+.main-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    bottom: -130px;
+    right: -80px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,229,220,.10);
+
+    filter:
+        blur(55px);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   INPUT HEADER
+========================================================= */
+
+.input-header {
+
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+}
+
+.input-title {
+
+    font-size: 15px;
+
+    font-weight: 700;
+}
+
+.supported {
+
+    color:
+        var(--cyan-light);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-wrapper {
+
+    position: relative;
+
+    z-index: 2;
+}
+
+input {
+
+    width: 100%;
+
+    height: 64px;
+
+    border-radius: 17px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    background:
+        #090c12;
+
+    color: white;
+
+    outline: none;
+
+    padding:
+        0
+        125px
+        0
+        18px;
+
+    font-size: 14px;
+
+    transition: .25s;
+}
+
+input::placeholder {
+    color: #606a79;
+}
+
+input:focus {
+
+    border-color:
+        rgba(0,229,220,.45);
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(0,229,220,.06),
+
+        0 0 25px
+        rgba(0,229,220,.06);
+}
+
+
+/* =========================================================
+   PASTE
+========================================================= */
+
+.paste-btn {
+
+    position: absolute;
+
+    right: 7px;
+    top: 7px;
+
+    height: 50px;
+
+    padding:
+        0
+        18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 13px;
+
+    background:
+        #11151e;
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.paste-btn:hover {
+
+    background:
+        linear-gradient(
+            120deg,
+            rgba(255,0,85,.12),
+            rgba(0,229,220,.08)
+        );
+
+    border-color:
+        rgba(255,255,255,.14);
+}
+
+.paste-btn i {
+    margin-right: 7px;
+}
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview-main {
+
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+
+    height: 64px;
+
+    margin-top: 14px;
+
+    border: none;
+
+    border-radius: 17px;
+
+    background:
+        var(--gradient);
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+
+        0 12px 35px
+        rgba(255,0,85,.17),
+
+        0 8px 30px
+        rgba(0,229,220,.08);
+
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+.preview-main:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+
+        0 16px 45px
+        rgba(255,0,85,.23),
+
+        0 12px 35px
+        rgba(0,229,220,.12);
+}
+
+.preview-main:active {
+    transform: scale(.985);
+}
+
+.preview-main i {
+    margin-right: 10px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+
+    display: none;
+
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    padding:
+        28px
+        0
+        5px;
+}
+
+.spinner {
+
+    width: 36px;
+    height: 36px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    border:
+        3px solid
+        rgba(255,255,255,.07);
+
+    border-top-color:
+        var(--pink);
+
+    border-right-color:
+        var(--cyan);
+
+    animation:
+        spin .8s linear infinite;
+}
+
+.loading p {
+
+    margin-top: 11px;
+
+    color:
+        var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+
+    display: none;
+
+    position: relative;
+    z-index: 2;
+
+    margin-top: 15px;
+
+    padding:
+        13px
+        15px;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,0,85,.07);
+
+    border:
+        1px solid
+        rgba(255,0,85,.17);
+
+    color:
+        #ff7196;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+.error i {
+    margin-right: 6px;
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result {
+
+    display: none;
+
+    position: relative;
+    z-index: 2;
+
+    margin-top: 27px;
+
+    animation:
+        fadeUp .35s ease;
+}
+
+
+/* =========================================================
+   VIDEO
+========================================================= */
+
+.video-box {
+
+    position: relative;
+
+    overflow: hidden;
+
+    width: 100%;
+
+    aspect-ratio:
+        9 / 16;
+
+    border-radius: 19px;
+
+    background: #000;
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    box-shadow:
+
+        0 25px 60px
+        rgba(0,0,0,.5);
+}
+
+.video-player {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    background: #000;
+
+    object-fit: cover;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   PLAY
+========================================================= */
+
+.play-overlay {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width: 88px;
+    height: 88px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    border:
+        2px solid
+        transparent;
+
+    background:
+
+        linear-gradient(
+            #080a0e,
+            #080a0e
+        ) padding-box,
+
+        var(--gradient2)
+        border-box;
+
+    color: white;
+
+    box-shadow:
+
+        0 10px 35px
+        rgba(0,0,0,.5),
+
+        0 0 35px
+        rgba(255,0,85,.18),
+
+        0 0 35px
+        rgba(0,229,220,.10);
+
+    transition:
+        opacity .2s,
+        transform .2s;
+}
+
+.play-overlay:hover {
+
+    transform:
+        translate(-50%,-50%)
+        scale(1.08);
+}
+
+.play-overlay i {
+
+    font-size: 29px;
+
+    margin-left: 5px;
+
+    background:
+        var(--gradient2);
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.video-box.playing
+.play-overlay {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+.video-box.play-button-hidden
+.play-overlay {
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   VIDEO DURATION
+========================================================= */
+
+.video-duration {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,.7);
+}
+
+.video-duration-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.video-progress {
+    width: 100%;
+    height: 4px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255,255,255,.35);
+}
+
+.video-progress-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: #fff;
+    transition: width .08s linear;
+}
+
+/* =========================================================
+   FULLSCREEN
+========================================================= */
+
+.fullscreen-btn {
+
+    position: absolute;
+
+    right: 12px;
+    bottom: 12px;
+
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0,0,0,.65);
+
+    color: white;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    z-index: 6;
+
+    backdrop-filter:
+        blur(10px);
+
+    opacity: .85;
+
+    transition: .2s;
+}
+
+.fullscreen-btn:hover {
+
+    opacity: 1;
+
+    transform:
+        scale(1.05);
+
+    background:
+        rgba(0,0,0,.85);
+}
+
+.video-box:fullscreen {
+
+    width: 100vw;
+    height: 100vh;
+
+    max-width: none;
+    max-height: none;
+
+    border: none;
+
+    border-radius: 0;
+
+    background: #000;
+}
+
+.video-box:fullscreen
+.video-player {
+
+    object-fit:
+        contain;
+}
+
+
+/* =========================================================
+   VIDEO INFO
+========================================================= */
+
+.video-info {
+
+    margin-top: 12px;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #111722,
+            #090d14
+        );
+
+    border:
+        1px solid
+        var(--border);
+}
+
+.creator {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+.avatar {
+
+    width: 56px;
+    height: 56px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ff0055,
+            #8b5cf6 50%,
+            #00e5dc
+        );
+
+    padding: 2px;
+
+    position: relative;
+}
+
+.avatar::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 2px;
+
+    border-radius: 50%;
+
+    background:
+        #0a0d13;
+}
+
+.creator-name {
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    color: white;
+}
+
+.creator-description {
+
+    margin-top: 5px;
+
+    color:
+        var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+
+    display: flex;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+    margin-top: 16px;
+
+    color:
+        #8b95a5;
+
+    font-size: 11px;
+}
+
+.stats span {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+.stats i {
+    font-size: 12px;
+}
+
+.stats .heart {
+    color:
+        var(--pink-light);
+}
+
+
+/* =========================================================
+   DOWNLOAD OPTIONS
+========================================================= */
+
+.download-options {
+
+    margin-top: 12px;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    background:
+        #0c1119;
+
+    border:
+        1px solid
+        var(--border);
+}
+
+.download-option {
+
+    min-height: 88px;
+
+    padding:
+        14px
+        17px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    transition: .2s;
+}
+
+.download-option
++ .download-option {
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.06);
+}
+
+.download-option:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,0,85,.025),
+            rgba(0,229,220,.025)
+        );
+}
+
+.option-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+.option-icon {
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.video-icon {
+
+    background:
+        rgba(255,0,85,.13);
+
+    color:
+        var(--pink-light);
+
+    box-shadow:
+        inset 0 0 20px
+        rgba(255,0,85,.04);
+}
+
+.music-icon {
+
+    background:
+        rgba(0,229,220,.11);
+
+    color:
+        var(--cyan-light);
+
+    box-shadow:
+        inset 0 0 20px
+        rgba(0,229,220,.04);
+}
+
+.option-title {
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    color: white;
+}
+
+.option-subtitle {
+
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    color:
+        #7f8999;
+}
+
+
+/* =========================================================
+   DOWNLOAD BUTTON
+========================================================= */
+
+.option-download {
+
+    height: 45px;
+
+    padding:
+        0
+        20px;
+
+    border-radius: 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: white;
+
+    background:
+        rgba(255,0,85,.08);
+
+    border:
+        1px solid
+        rgba(255,0,85,.55);
+
+    transition: .2s;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.option-download:hover {
+
+    background:
+        rgba(255,0,85,.16);
+
+    border-color:
+        var(--pink);
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 20px
+        rgba(255,0,85,.12);
+}
+
+.music-download {
+
+    border-color:
+        rgba(0,229,220,.55);
+
+    background:
+        rgba(0,229,220,.07);
+}
+
+.music-download:hover {
+
+    background:
+        rgba(0,229,220,.14);
+
+    border-color:
+        var(--cyan);
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,229,220,.10);
+}
+
+.option-download:disabled {
+
+    opacity: .6;
+
+    cursor: wait;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.download-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+}
+
+.download-modal.show {
+    display: flex;
+}
+
+.download-modal-box {
+
+    width: 100%;
+
+    max-width: 380px;
+
+    padding: 24px;
+
+    border-radius: 22px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #141923,
+            #080b11
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    box-shadow:
+
+        0 30px 90px
+        rgba(0,0,0,.75),
+
+        0 0 45px
+        rgba(139,92,246,.08);
+
+    animation:
+        modalIn .22s ease;
+}
+
+.download-modal-icon {
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 16px;
+
+    border-radius: 16px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+
+    background:
+        rgba(255,0,85,.13);
+
+    color:
+        var(--pink-light);
+}
+
+.download-modal-icon.music {
+
+    background:
+        rgba(0,229,220,.11);
+
+    color:
+        var(--cyan-light);
+}
+
+.download-modal-title {
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    color: white;
+
+    margin-bottom: 8px;
+}
+
+.download-modal-text {
+
+    color:
+        var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    margin-bottom: 22px;
+}
+
+.download-modal-actions {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.modal-btn {
+
+    flex: 1;
+
+    height: 48px;
+
+    border-radius: 13px;
+
+    border: none;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.modal-cancel {
+
+    color:
+        #c7ccd5;
+
+    background:
+        #171c25;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.modal-cancel:hover {
+    background:
+        #222832;
+}
+
+.modal-confirm {
+
+    color: white;
+
+    background:
+        var(--gradient2);
+
+    box-shadow:
+
+        0 8px 25px
+        rgba(255,0,85,.14);
+}
+
+.modal-confirm:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+
+        0 10px 30px
+        rgba(255,0,85,.20);
+}
+
+.modal-btn:active {
+    transform: scale(.97);
+}
+
+.modal-btn:disabled {
+
+    opacity: .65;
+
+    cursor: wait;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 20px;
+
+    color:
+        #717b8b;
+
+    font-size: 10px;
+}
+
+.footer i {
+    color:
+        var(--cyan);
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes spin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+}
+
+@keyframes fadeUp {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(12px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+@keyframes modalIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(.94)
+            translateY(8px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px) {
+
+    body {
+
+        padding:
+            15px
+            8px
+            25px;
+    }
+
+    .main-card {
+
+        padding: 16px;
+
+        border-radius: 21px;
+    }
+
+    .header {
+
+        margin-bottom: 18px;
+    }
+
+    .logo {
+
+        width: 59px;
+        height: 59px;
+
+        font-size: 27px;
+    }
+
+    h1 {
+
+        font-size: 28px;
+
+        letter-spacing:
+            -1.5px;
+    }
+
+    .brand {
+
+        margin-top: 8px;
+
+        padding:
+            6px
+            13px;
+
+        font-size: 13px;
+
+        letter-spacing:
+            1.4px;
+    }
+
+    .subtitle {
+
+        font-size: 11px;
+    }
+
+    .input-header {
+
+        align-items:
+            flex-start;
+    }
+
+    .input-title {
+        font-size: 14px;
+    }
+
+    .supported {
+        font-size: 10px;
+    }
+
+    input {
+
+        height: 57px;
+
+        padding-left: 14px;
+
+        padding-right: 100px;
+
+        font-size: 13px;
+    }
+
+    .paste-btn {
+
+        height: 45px;
+
+        padding:
+            0
+            12px;
+
+        font-size: 11px;
+    }
+
+    .preview-main {
+
+        height: 58px;
+
+        font-size: 15px;
+    }
+
+    .video-box {
+
+        border-radius: 17px;
+    }
+
+    .play-overlay {
+
+        width: 78px;
+        height: 78px;
+    }
+
+    .play-overlay i {
+        font-size: 27px;
+    }
+
+    .fullscreen-btn {
+
+        width: 40px;
+        height: 40px;
+
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .video-info {
+        padding: 16px;
+    }
+
+    .avatar {
+
+        width: 48px;
+        height: 48px;
+    }
+
+    .creator-name {
+        font-size: 12px;
+    }
+
+    .creator-description {
+        font-size: 11px;
+    }
+
+    .stats {
+
+        gap: 15px;
+
+        font-size: 10px;
+    }
+
+    .download-option {
+
+        min-height: 76px;
+
+        padding: 11px;
+    }
+
+    .option-icon {
+
+        width: 44px;
+        height: 44px;
+
+        font-size: 18px;
+    }
+
+    .option-title {
+        font-size: 12px;
+    }
+
+    .option-subtitle {
+        font-size: 9px;
+    }
+
+    .option-download {
+
+        height: 40px;
+
+        padding:
+            0
+            13px;
+
+        font-size: 11px;
+    }
+
+    .download-modal-box {
+
+        padding: 20px;
+
+        border-radius: 20px;
+    }
+
+    .download-modal-title {
+        font-size: 18px;
+    }
+
+}
+
+</style>
 </head>
+
+
 <body>
-    <div class="container">
-        <div class="logo">
-            <i class="fab fa-tiktok"></i>
-            <h1>TikTok Downloader</h1>
-        </div>
-        
-        <p class="description">Download video TikTok tanpa watermark dengan mudah dan cepat.</p>
-        
-        <div class="input-group">
-            <input type="text" id="tiktok-url" placeholder="Tempel link TikTok di sini...">
-            <button id="download-btn"><i class="fas fa-download"></i> Download</button>
-        </div>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Memproses video...</p>
-        </div>
-        
-        <div class="error" id="error">
-            <i class="fas fa-exclamation-circle"></i>
-            <span id="error-message">URL tidak valid. Silakan coba lagi.</span>
-        </div>
-        
-        <div class="result" id="result">
-            <img src="" alt="Video Preview" class="video-preview" id="video-preview">
-            
-            <div class="video-info">
-                <h3 id="video-author"></h3>
-                <p id="video-desc"></p>
-                <p id="video-stats"></p>
-            </div>
-            
-            <div class="download-options">
-                <a href="#" class="download-btn" id="download-video"><i class="fas fa-video"></i> Download Video</a>
-                <a href="#" class="download-btn" id="download-music"><i class="fas fa-music"></i> Download Musik</a>
-            </div>
-        </div>
-        
-        <div class="how-to">
-            <h3>Cara Menggunakan:</h3>
-            <ol>
-                <li>Buka aplikasi TikTok dan pilih video yang ingin didownload</li>
-                <li>Tekan tombol "Bagikan" dan salin link video</li>
-                <li>Tempel link video di kolom input di atas</li>
-                <li>Klik tombol "Download" dan tunggu proses selesai</li>
-                <li>Klik "Download Video" atau "Download Musik" untuk menyimpan</li>
-            </ol>
-        </div>
-        
-        <footer>
-            <p>Powered by Rio Ferdinand</p>
-        </footer>
+
+<div class="container">
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header class="header">
+
+
+    <div class="logo">
+
+        <i class="fas fa-download"></i>
+
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const downloadBtn = document.getElementById('download-btn');
-            const tiktokUrlInput = document.getElementById('tiktok-url');
-            const loadingElement = document.getElementById('loading');
-            const errorElement = document.getElementById('error');
-            const resultElement = document.getElementById('result');
-            const videoPreview = document.getElementById('video-preview');
-            const videoAuthor = document.getElementById('video-author');
-            const videoDesc = document.getElementById('video-desc');
-            const videoStats = document.getElementById('video-stats');
-            const downloadVideoLink = document.getElementById('download-video');
-            const downloadMusicLink = document.getElementById('download-music');
-            const errorMessage = document.getElementById('error-message');
-            
-            // Contoh URL TikTok untuk demo
-            const exampleUrls = [
-                "https://www.tiktok.com/@tiktok/video/7152101834538536234",
-                "https://vm.tiktok.com/ZMNQkxX5Y/",
-                "https://vt.tiktok.com/ZSNQkxX5Y/"
-            ];
-            
-            // Tampilkan URL contoh secara acak
-            tiktokUrlInput.placeholder = `Tempel link TikTok di sini... Contoh: ${exampleUrls[Math.floor(Math.random() * exampleUrls.length)]}`;
-            
-            downloadBtn.addEventListener('click', processDownload);
-            
-            function processDownload() {
-                const url = tiktokUrlInput.value.trim();
-                
-                // Validasi URL
-                if (!isValidUrl(url)) {
-                    showError("URL tidak valid. Silakan masukkan URL TikTok yang valid.");
+
+    <h1>
+
+        <span class="tik">Tik</span><span class="tok">Tok</span>
+        Downloader
+
+    </h1>
+
+
+    <!-- BRAND DI ATAS -->
+
+    <div class="brand">
+
+        <span class="brand-dot"></span>
+
+        BY RIO FERDINAN
+
+    </div>
+
+
+    <p class="subtitle">
+
+        Download video TikTok dengan cepat dan mudah.
+
+    </p>
+
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="main-card">
+
+
+    <div class="input-header">
+
+        <span class="input-title">
+            Link TikTok
+        </span>
+
+
+        <span class="supported">
+
+            <i class="fas fa-circle-check"></i>
+
+            TikTok supported
+
+        </span>
+
+    </div>
+
+
+    <!-- INPUT -->
+
+    <div class="input-wrapper">
+
+        <input
+            type="text"
+            id="tiktok-url"
+            placeholder="Tempel link TikTok di sini..."
+            autocomplete="off"
+        >
+
+
+        <button
+            type="button"
+            class="paste-btn"
+            id="paste-btn"
+        >
+
+            <i class="fas fa-copy"></i>
+
+            Paste
+
+        </button>
+
+    </div>
+
+
+    <!-- PREVIEW -->
+
+    <button
+        type="button"
+        class="preview-main"
+        id="preview-btn"
+    >
+
+        <i class="fas fa-play"></i>
+
+        Preview Video
+
+    </button>
+
+
+    <!-- LOADING -->
+
+    <div
+        class="loading"
+        id="loading"
+    >
+
+        <div class="spinner"></div>
+
+        <p>
+            Sedang mengambil informasi video...
+        </p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        class="error"
+        id="error"
+    >
+
+        <i class="fas fa-circle-exclamation"></i>
+
+        <span id="error-message"></span>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <section
+        class="result"
+        id="result"
+    >
+
+
+        <!-- VIDEO -->
+
+        <div
+            class="video-box"
+            id="video-box"
+        >
+
+
+            <video
+                id="video-player"
+                class="video-player"
+                playsinline
+                preload="metadata"
+            ></video>
+
+            <div class="video-duration" aria-hidden="true">
+                <div class="video-duration-row">
+                    <span id="video-time">0:00 / 0:00</span>
+                </div>
+                <div class="video-progress">
+                    <div
+                        id="video-progress-fill"
+                        class="video-progress-fill"
+                    ></div>
+                </div>
+            </div>
+
+
+            <!-- PLAY -->
+
+            <button
+                type="button"
+                class="play-overlay"
+                id="play-button"
+            >
+
+                <i class="fas fa-play"></i>
+
+            </button>
+
+
+            <!-- FULLSCREEN -->
+
+            <button
+                type="button"
+                class="fullscreen-btn"
+                id="fullscreen-button"
+            >
+
+                <i class="fas fa-expand"></i>
+
+            </button>
+
+
+        </div>
+
+
+        <!-- INFO -->
+
+        <div class="video-info">
+
+
+            <div class="creator">
+
+
+                <div
+                    class="avatar"
+                    id="creator-avatar"
+                ></div>
+
+
+                <div>
+
+
+                    <div
+                        class="creator-name"
+                        id="video-author"
+                    ></div>
+
+
+                    <div
+                        class="creator-description"
+                        id="video-desc"
+                    ></div>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                class="stats"
+                id="video-stats"
+            ></div>
+
+
+        </div>
+
+
+        <!-- DOWNLOAD -->
+
+        <div
+            class="download-options"
+            id="download-options"
+        >
+
+
+            <!-- VIDEO -->
+
+            <div
+                class="download-option"
+                id="video-option"
+            >
+
+
+                <div class="option-left">
+
+
+                    <div
+                        class="option-icon video-icon"
+                    >
+
+                        <i class="fas fa-video"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="option-title">
+
+                            Download Video
+
+                        </div>
+
+
+                        <div class="option-subtitle">
+
+                            Video tanpa watermark
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="option-download"
+                    id="download-video"
+                >
+
+                    <i class="fas fa-download"></i>
+
+                    Download
+
+                </button>
+
+
+            </div>
+
+
+            <!-- MUSIC -->
+
+            <div
+                class="download-option"
+                id="music-option"
+            >
+
+
+                <div class="option-left">
+
+
+                    <div
+                        class="option-icon music-icon"
+                    >
+
+                        <i class="fas fa-music"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="option-title">
+
+                            Download Musik
+
+                        </div>
+
+
+                        <div class="option-subtitle">
+
+                            Audio MP3
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="option-download music-download"
+                    id="download-music"
+                >
+
+                    <i class="fas fa-download"></i>
+
+                    Download
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <div class="footer">
+
+        <i class="fas fa-shield-halved"></i>
+
+        Aman, cepat, dan mudah digunakan
+
+    </div>
+
+
+</main>
+
+</div>
+
+
+<!-- =====================================================
+     DOWNLOAD MODAL
+====================================================== -->
+
+<div
+    class="download-modal"
+    id="download-modal"
+>
+
+
+    <div class="download-modal-box">
+
+
+        <div
+            class="download-modal-icon"
+            id="modal-icon"
+        >
+
+            <i
+                class="fas fa-video"
+                id="modal-icon-symbol"
+            ></i>
+
+        </div>
+
+
+        <div
+            class="download-modal-title"
+            id="modal-title"
+        >
+
+            Download Video?
+
+        </div>
+
+
+        <div
+            class="download-modal-text"
+            id="modal-text"
+        >
+
+            Video tanpa watermark siap
+            didownload ke perangkat kamu.
+
+        </div>
+
+
+        <div class="download-modal-actions">
+
+
+            <button
+                type="button"
+                class="modal-btn modal-cancel"
+                id="modal-cancel"
+            >
+
+                Batal
+
+            </button>
+
+
+            <button
+                type="button"
+                class="modal-btn modal-confirm"
+                id="modal-confirm"
+            >
+
+                Download Video
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const input =
+    document.getElementById(
+        "tiktok-url"
+    );
+
+const pasteBtn =
+    document.getElementById(
+        "paste-btn"
+    );
+
+const previewBtn =
+    document.getElementById(
+        "preview-btn"
+    );
+
+const loading =
+    document.getElementById(
+        "loading"
+    );
+
+const error =
+    document.getElementById(
+        "error"
+    );
+
+const errorMessage =
+    document.getElementById(
+        "error-message"
+    );
+
+const result =
+    document.getElementById(
+        "result"
+    );
+
+const videoBox =
+    document.getElementById(
+        "video-box"
+    );
+
+const video =
+    document.getElementById(
+        "video-player"
+    );
+
+const playButton =
+    document.getElementById(
+        "play-button"
+    );
+
+const fullscreenButton =
+    document.getElementById(
+        "fullscreen-button"
+    );
+
+const videoAuthor =
+    document.getElementById(
+        "video-author"
+    );
+
+const videoDesc =
+    document.getElementById(
+        "video-desc"
+    );
+
+const videoStats =
+    document.getElementById(
+        "video-stats"
+    );
+
+const downloadVideo =
+    document.getElementById(
+        "download-video"
+    );
+
+const downloadMusic =
+    document.getElementById(
+        "download-music"
+    );
+
+const videoOption =
+    document.getElementById(
+        "video-option"
+    );
+
+const musicOption =
+    document.getElementById(
+        "music-option"
+    );
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+const downloadModal =
+    document.getElementById(
+        "download-modal"
+    );
+
+const modalIcon =
+    document.getElementById(
+        "modal-icon"
+    );
+
+const modalIconSymbol =
+    document.getElementById(
+        "modal-icon-symbol"
+    );
+
+const modalTitle =
+    document.getElementById(
+        "modal-title"
+    );
+
+const modalText =
+    document.getElementById(
+        "modal-text"
+    );
+
+const modalCancel =
+    document.getElementById(
+        "modal-cancel"
+    );
+
+const modalConfirm =
+    document.getElementById(
+        "modal-confirm"
+    );
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let videoDownloadURL = "";
+
+let musicDownloadURL = "";
+
+let currentVideoName = "";
+
+let currentMusicName = "";
+
+let pendingDownloadURL = "";
+
+let pendingDownloadName = "";
+
+let pendingDownloadType = "";
+
+
+/* =========================================================
+   VALIDATE URL
+========================================================= */
+
+function isValidTikTokURL(url) {
+
+    if (!url) {
+        return false;
+    }
+
+    try {
+
+        const parsed =
+            new URL(url);
+
+        const host =
+            parsed.hostname.toLowerCase();
+
+        return (
+
+            host === "tiktok.com" ||
+            host === "www.tiktok.com" ||
+            host === "vm.tiktok.com" ||
+            host === "vt.tiktok.com"
+
+        );
+
+    }
+
+    catch {
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(message) {
+
+    loading.style.display =
+        "none";
+
+    errorMessage.textContent =
+        message;
+
+    error.style.display =
+        "block";
+
+}
+
+
+/* =========================================================
+   NUMBER
+========================================================= */
+
+function formatNumber(number) {
+
+    if (
+        number === undefined ||
+        number === null
+    ) {
+
+        return "0";
+
+    }
+
+    return Number(number)
+        .toLocaleString("id-ID");
+
+}
+
+
+/* =========================================================
+   PROCESS PREVIEW
+========================================================= */
+
+async function processPreview() {
+
+    const url =
+        input.value.trim();
+
+    error.style.display =
+        "none";
+
+    result.style.display =
+        "none";
+
+    video.pause();
+
+
+    if (!isValidTikTokURL(url)) {
+
+        showError(
+            "Link TikTok tidak valid. Masukkan link TikTok yang benar."
+        );
+
+        return;
+
+    }
+
+
+    loading.style.display =
+        "block";
+
+
+    try {
+
+        const apiURL =
+            "https://www.tikwm.com/api/?url=" +
+            encodeURIComponent(url);
+
+
+        const response =
+            await fetch(apiURL);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server error: " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.code !== 0 ||
+            !data.data
+        ) {
+
+            throw new Error(
+                data.msg ||
+                "Video tidak dapat diproses."
+            );
+
+        }
+
+
+        displayResult(
+            data.data
+        );
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        showError(
+            err.message ||
+            "Gagal memproses video."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DISPLAY
+========================================================= */
+
+function displayResult(data) {
+
+    loading.style.display =
+        "none";
+
+
+    const author =
+        data.author || {};
+
+
+    /* VIDEO */
+
+    if (data.play) {
+
+        video.src =
+            data.play;
+
+        video.poster =
+            data.cover || "";
+
+        video.load();
+
+
+        videoOption.style.display =
+            "flex";
+
+
+        videoDownloadURL =
+            data.play;
+
+
+        currentVideoName =
+            `TikTok_${data.aweme_id || Date.now()}.mp4`;
+
+    }
+
+    else {
+
+        videoOption.style.display =
+            "none";
+
+    }
+
+
+    /* AUTHOR */
+
+    const username =
+        author.unique_id ||
+        "unknown";
+
+    const nickname =
+        author.nickname ||
+        "";
+
+
+    videoAuthor.textContent =
+        `@${username} · ${nickname}`;
+
+
+    /* DESCRIPTION */
+
+    videoDesc.textContent =
+        data.title ||
+        "Tidak ada deskripsi.";
+
+
+    /* STATS */
+
+    videoStats.innerHTML = `
+
+        <span class="heart">
+
+            <i class="fas fa-heart"></i>
+
+            ${formatNumber(
+                data.digg_count
+            )}
+
+        </span>
+
+
+        <span>
+
+            <i class="fas fa-comment"></i>
+
+            ${formatNumber(
+                data.comment_count
+            )}
+
+        </span>
+
+
+        <span>
+
+            <i class="fas fa-share"></i>
+
+            ${formatNumber(
+                data.share_count
+            )}
+
+        </span>
+
+
+        <span>
+
+            <i class="fas fa-eye"></i>
+
+            ${formatNumber(
+                data.play_count
+            )}
+
+        </span>
+
+    `;
+
+
+    /* MUSIC */
+
+    if (data.music) {
+
+        musicOption.style.display =
+            "flex";
+
+        musicDownloadURL =
+            data.music;
+
+        currentMusicName =
+            `TikTok_Music_${data.aweme_id || Date.now()}.mp3`;
+
+    }
+
+    else {
+
+        musicOption.style.display =
+            "none";
+
+    }
+
+
+    result.style.display =
+        "block";
+
+
+
+
+}
+
+
+/* =========================================================
+   VIDEO RATIO
+========================================================= */
+
+video.addEventListener(
+    "loadedmetadata",
+    () => {
+
+        if (
+            video.videoWidth &&
+            video.videoHeight
+        ) {
+
+            videoBox.style.aspectRatio =
+                `${video.videoWidth}/${video.videoHeight}`;
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VIDEO DURATION
+========================================================= */
+
+const videoTime =
+    document.getElementById("video-time");
+
+const videoProgressFill =
+    document.getElementById("video-progress-fill");
+
+function formatVideoTime(seconds) {
+
+    if (!Number.isFinite(seconds)) {
+        return "0:00";
+    }
+
+    const total =
+        Math.max(0, Math.floor(seconds));
+
+    const minutes =
+        Math.floor(total / 60);
+
+    const secs =
+        String(total % 60)
+        .padStart(2, "0");
+
+    return `${minutes}:${secs}`;
+}
+
+function updateVideoDuration() {
+
+    const current =
+        formatVideoTime(video.currentTime);
+
+    const total =
+        formatVideoTime(video.duration);
+
+    videoTime.textContent =
+        `${current} / ${total}`;
+
+    if (
+        Number.isFinite(video.duration) &&
+        video.duration > 0
+    ) {
+
+        const percent =
+            (video.currentTime / video.duration) * 100;
+
+        videoProgressFill.style.width =
+            `${Math.min(100, Math.max(0, percent))}%`;
+    }
+}
+
+video.addEventListener(
+    "loadedmetadata",
+    updateVideoDuration
+);
+
+video.addEventListener(
+    "timeupdate",
+    updateVideoDuration
+);
+
+
+/* =========================================================
+   PLAY
+========================================================= */
+
+playButton.addEventListener(
+    "click",
+    async event => {
+
+        event.stopPropagation();
+
+
+        if (!video.src) {
+            return;
+        }
+
+
+        if (video.paused) {
+
+            try {
+
+                await video.play();
+
+            }
+
+            catch (err) {
+
+                console.error(err);
+
+            }
+
+        }
+
+        else {
+
+            video.pause();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VIDEO CLICK
+========================================================= */
+
+/*
+   Tapping the video does not toggle playback.
+   Playback remains controlled by the center Play button.
+*/
+
+
+/* =========================================================
+   PLAY BUTTON AUTO-HIDE
+========================================================= */
+
+video.addEventListener(
+    "click",
+    () => {
+
+        if (video.paused) {
+            return;
+        }
+
+        const isHidden =
+            videoBox.classList.contains(
+                "play-button-hidden"
+            );
+
+        clearTimeout(playButtonTimer);
+
+        if (isHidden) {
+
+            /* 1 tap while hidden = show button.
+               Automatic hide remains 1.5 seconds later. */
+            videoBox.classList.remove(
+                "play-button-hidden"
+            );
+
+            playButtonTimer = setTimeout(
+                () => {
+
+                    if (!video.paused) {
+
+                        videoBox.classList.add(
+                            "play-button-hidden"
+                        );
+
+                    }
+
+                },
+                1500
+            );
+
+        } else {
+
+            /* 1 tap while visible = hide button immediately.
+               This is now a valid manual trigger. */
+            videoBox.classList.add(
+                "play-button-hidden"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PLAY STATE
+========================================================= */
+
+let playButtonTimer = null;
+
+function hidePlayButtonSoon() {
+
+    clearTimeout(playButtonTimer);
+
+    playButtonTimer = setTimeout(
+        () => {
+            if (!video.paused) {
+                videoBox.classList.add(
+                    "play-button-hidden"
+                );
+            }
+        },
+        1500
+    );
+}
+
+video.addEventListener(
+    "play",
+    () => {
+
+        videoBox.classList.add(
+            "playing"
+        );
+
+        const icon =
+            playButton.querySelector("i");
+
+        if (icon) {
+            icon.className =
+                "fas fa-pause";
+        }
+
+        hidePlayButtonSoon();
+
+    }
+);
+
+video.addEventListener(
+    "pause",
+    () => {
+
+        videoBox.classList.remove(
+            "playing"
+        );
+
+        videoBox.classList.remove(
+            "play-button-hidden"
+        );
+
+        clearTimeout(playButtonTimer);
+
+        const icon =
+            playButton.querySelector("i");
+
+        if (icon) {
+            icon.className =
+                "fas fa-play";
+        }
+
+    }
+);
+
+video.addEventListener(
+    "ended",
+    () => {
+
+        videoBox.classList.remove(
+            "playing"
+        );
+
+        video.currentTime = 0;
+
+    }
+);
+
+
+/* =========================================================
+   FULLSCREEN
+========================================================= */
+
+fullscreenButton.addEventListener(
+    "click",
+    async event => {
+
+        event.stopPropagation();
+
+
+        try {
+
+            if (
+                !document.fullscreenElement
+            ) {
+
+                if (
+                    videoBox.requestFullscreen
+                ) {
+
+                    await videoBox.requestFullscreen();
+
+                }
+
+                else if (
+                    video.webkitEnterFullscreen
+                ) {
+
+                    video.webkitEnterFullscreen();
+
+                }
+
+            }
+
+            else {
+
+                await document.exitFullscreen();
+
+            }
+
+        }
+
+        catch (err) {
+
+            console.error(err);
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   FULLSCREEN ICON
+========================================================= */
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        const icon =
+            fullscreenButton.querySelector(
+                "i"
+            );
+
+
+        if (
+            document.fullscreenElement
+        ) {
+
+            icon.className =
+                "fas fa-compress";
+
+        }
+
+        else {
+
+            icon.className =
+                "fas fa-expand";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   OPEN MODAL
+========================================================= */
+
+function openDownloadConfirmation(
+    type,
+    url,
+    filename
+) {
+
+    if (!url) {
+
+        showError(
+            "File yang akan didownload tidak tersedia."
+        );
+
+        return;
+
+    }
+
+
+    pendingDownloadURL =
+        url;
+
+    pendingDownloadName =
+        filename;
+
+    pendingDownloadType =
+        type;
+
+
+    if (type === "video") {
+
+        modalIcon.classList.remove(
+            "music"
+        );
+
+        modalIconSymbol.className =
+            "fas fa-video";
+
+        modalTitle.textContent =
+            "Download Video?";
+
+        modalText.textContent =
+            "Video tanpa watermark siap didownload ke perangkat kamu.";
+
+        modalConfirm.textContent =
+            "Download Video";
+
+    }
+
+    else {
+
+        modalIcon.classList.add(
+            "music"
+        );
+
+        modalIconSymbol.className =
+            "fas fa-music";
+
+        modalTitle.textContent =
+            "Download Musik?";
+
+        modalText.textContent =
+            "Audio MP3 siap didownload ke perangkat kamu.";
+
+        modalConfirm.textContent =
+            "Download Musik";
+
+    }
+
+
+    downloadModal.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeDownloadConfirmation() {
+
+    downloadModal.classList.remove(
+        "show"
+    );
+
+    pendingDownloadURL = "";
+
+    pendingDownloadName = "";
+
+    pendingDownloadType = "";
+
+}
+
+
+/* =========================================================
+   CANCEL
+========================================================= */
+
+modalCancel.addEventListener(
+    "click",
+    closeDownloadConfirmation
+);
+
+
+/* =========================================================
+   CLICK OUTSIDE
+========================================================= */
+
+downloadModal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            downloadModal
+        ) {
+
+            closeDownloadConfirmation();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape" &&
+            downloadModal.classList.contains(
+                "show"
+            )
+        ) {
+
+            closeDownloadConfirmation();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DOWNLOAD FILE
+========================================================= */
+
+async function downloadFile(
+    url,
+    filename,
+    button
+) {
+
+    if (!url) {
+
+        throw new Error(
+            "File download tidak tersedia."
+        );
+
+    }
+
+
+    const oldHTML =
+        button.innerHTML;
+
+
+    button.disabled =
+        true;
+
+    button.innerHTML = `
+        <i class="fas fa-spinner fa-spin"></i>
+        Menyiapkan...
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "GET"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "File tidak dapat diakses."
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        const blobURL =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+
+        link.href =
+            blobURL;
+
+        link.download =
+            filename;
+
+        link.style.display =
+            "none";
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    blobURL
+                );
+
+                link.remove();
+
+            },
+            1500
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Download error:",
+            error
+        );
+
+
+        const fallback =
+            document.createElement(
+                "a"
+            );
+
+
+        fallback.href =
+            url;
+
+        fallback.target =
+            "_self";
+
+        fallback.rel =
+            "noopener";
+
+
+        document.body.appendChild(
+            fallback
+        );
+
+
+        fallback.click();
+
+        fallback.remove();
+
+    }
+
+    finally {
+
+        button.disabled =
+            false;
+
+        button.innerHTML =
+            oldHTML;
+
+    }
+
+}
+
+
+/* =========================================================
+   CONFIRM DOWNLOAD
+========================================================= */
+
+modalConfirm.addEventListener(
+    "click",
+    async () => {
+
+        const url =
+            pendingDownloadURL;
+
+        const filename =
+            pendingDownloadName;
+
+
+        if (!url) {
+
+            closeDownloadConfirmation();
+
+            return;
+
+        }
+
+
+        const oldText =
+            modalConfirm.innerHTML;
+
+
+        modalConfirm.disabled =
+            true;
+
+
+        modalConfirm.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            Menyiapkan...
+        `;
+
+
+        try {
+
+            await downloadFile(
+                url,
+                filename,
+                modalConfirm
+            );
+
+        }
+
+        finally {
+
+            modalConfirm.disabled =
+                false;
+
+            modalConfirm.innerHTML =
+                oldText;
+
+            closeDownloadConfirmation();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VIDEO DOWNLOAD
+========================================================= */
+
+downloadVideo.addEventListener(
+    "click",
+    () => {
+
+        openDownloadConfirmation(
+            "video",
+            videoDownloadURL,
+            currentVideoName
+        );
+
+    }
+);
+
+
+/* =========================================================
+   MUSIC DOWNLOAD
+========================================================= */
+
+downloadMusic.addEventListener(
+    "click",
+    () => {
+
+        openDownloadConfirmation(
+            "music",
+            musicDownloadURL,
+            currentMusicName
+        );
+
+    }
+);
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+previewBtn.addEventListener(
+    "click",
+    processPreview
+);
+
+
+/* =========================================================
+   ENTER
+========================================================= */
+
+input.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            processPreview();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PASTE
+========================================================= */
+
+pasteBtn.addEventListener(
+    "click",
+    async () => {
+
+        try {
+
+            if (
+                navigator.clipboard &&
+                navigator.clipboard.readText
+            ) {
+
+                const text =
+                    await navigator.clipboard.readText();
+
+
+                if (
+                    text &&
+                    text.trim()
+                ) {
+
+                    input.value =
+                        text.trim();
+
+
+                    error.style.display =
+                        "none";
+
+
+                    if (
+                        isValidTikTokURL(
+                            text.trim()
+                        )
+                    ) {
+
+                        processPreview();
+
+                    }
+
+                    else {
+
+                        showError(
+                            "Isi clipboard bukan link TikTok yang valid."
+                        );
+
+                    }
+
+
                     return;
+
                 }
-                
-                // Tampilkan loading, sembunyikan error dan hasil sebelumnya
-                loadingElement.style.display = 'block';
-                errorElement.style.display = 'none';
-                resultElement.style.display = 'none';
-                
-                // Panggil API TikWM
-                fetchFromAPI(url);
+
             }
-            
-            function isValidUrl(string) {
-                if (!string) return false;
-                
-                // Regex sederhana untuk memeriksa URL TikTok
-                const tiktokRegex = /(https?:\/\/)?(www\.)?(tiktok\.com|vt\.tiktok\.com|vm\.tiktok\.com)\/.+/;
-                return tiktokRegex.test(string);
-            }
-            
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorElement.style.display = 'block';
-                loadingElement.style.display = 'none';
-            }
-            
-            async function fetchFromAPI(url) {
-                try {
-                    // Encode URL untuk API
-                    const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
-                    
-                    // Lakukan request ke API
-                    const response = await fetch(apiUrl);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    // Periksa jika data valid
-                    if (data.code !== 0 || !data.data) {
-                        throw new Error(data.msg || 'Tidak dapat memproses video');
-                    }
-                    
-                    // Tampilkan hasil
-                    displayResult(data.data);
-                    
-                } catch (error) {
-                    console.error('Error fetching from API:', error);
-                    showError(`Terjadi kesalahan: ${error.message || 'Tidak dapat memproses permintaan'}`);
+
+        }
+
+        catch (err) {
+
+            console.log(
+                "Clipboard API ditolak:",
+                err
+            );
+
+        }
+
+
+        input.focus();
+
+        input.select();
+
+
+        showError(
+            "Clipboard dibatasi browser. Tekan lama kolom lalu pilih Paste."
+        );
+
+    }
+);
+
+
+/* =========================================================
+   AUTO PASTE
+========================================================= */
+
+input.addEventListener(
+    "paste",
+    () => {
+
+        setTimeout(
+            () => {
+
+                const value =
+                    input.value.trim();
+
+
+                if (
+                    isValidTikTokURL(value)
+                ) {
+
+                    processPreview();
+
                 }
-            }
-            
-            function displayResult(data) {
-                // Sembunyikan loading
-                loadingElement.style.display = 'none';
-                
-                // Set data video
-                videoPreview.src = data.cover;
-                videoAuthor.textContent = `Creator: @${data.author.unique_id} (${data.author.nickname})`;
-                videoDesc.textContent = `Deskripsi: ${data.title}`;
-                videoStats.textContent = `❤️ ${data.digg_count} | 💬 ${data.comment_count} | 🔄 ${data.share_count}`;
-                
-                // Set link download
-                downloadVideoLink.href = data.play;
-                downloadVideoLink.download = `tiktok_${data.aweme_id}.mp4`;
-                
-                // Set link musik jika tersedia
-                if (data.music) {
-                    downloadMusicLink.href = data.music;
-                    downloadMusicLink.download = `tiktok_music_${data.aweme_id}.mp3`;
-                    downloadMusicLink.style.display = 'inline-block';
-                } else {
-                    downloadMusicLink.style.display = 'none';
-                }
-                
-                // Tampilkan hasil
-                resultElement.style.display = 'block';
-                
-                // Scroll ke hasil
-                resultElement.scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            // Handler untuk paste event
-            tiktokUrlInput.addEventListener('paste', function(e) {
-                setTimeout(() => {
-                    const pastedText = e.clipboardData.getData('text');
-                    if (isValidUrl(pastedText)) {
-                        // Auto-process jika URL valid
-                        processDownload();
-                    }
-                }, 100);
-            });
-        });
-    </script>
+
+            },
+            150
+        );
+
+    }
+);
+
+</script>
+
 </body>
 </html>
